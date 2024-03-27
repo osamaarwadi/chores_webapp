@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %} Store {% endblock %}
+
+{% block content %}
+    <form action="/store" method="post">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Reward</th>
+                <th>Notes</th>
+                <th>Cost</th>
+                <th>Claimed By</th>
+                <th></th>
+            </tr>
+        </thead>
+        </tbody>
+        {% for reward in rewards %}
+            <tr>
+                <td> {{ reward["reward"] }} </td>
+                <td> {{ reward["notes"] }} </td>
+                <td> {{ reward["cost"] }} </td>
+                <td> {{ reward["username"] }} </td>
+                {% if session["admin_id"] %}
+                    {% if reward["user_id"] %}
+                    <td> <button type="submit" class="btn btn-primary" name='complete_id' value='{{ reward["id"] }}'>Reward Granted</button> </td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    <td> <button type="submit" class="btn btn-primary" name='delete_id' value='{{ reward["id"] }}'>Delete</button> </td>
+                {% elif session["user_id"] %}
+                    {% if reward["user_id"] %}
+                        <td><i>TAKEN</i></td>
+                    {% else %}
+                        <td> <button type="submit" class="btn btn-primary" name='claim_id' value='{{ reward["id"] }}'>Claim</button> </td>
+                    {% endif %}
+                {% endif %}
+                <td> </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </form>
+
+
+{% endblock %}

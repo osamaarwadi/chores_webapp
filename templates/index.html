@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+    <div class="container" style="display: flex; justify-content: space-between;">
+        <div class="element" style="margin-right: auto;">Welcome, {{ user }}</div>
+        {% if session["user_id"] %}
+            <div class="element">Credits: {{ credits }}</div>
+        {% endif %}
+    </div>
+    <form action="/" method="post">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Chore</th>
+                <th>Notes</th>
+                <th>Credits</th>
+                <th>Claimed By</th>
+                <th></th>
+            </tr>
+        </thead>
+        </tbody>
+        {% for chore in chores %}
+            <tr>
+                <td> {{ chore["chore"] }} </td>
+                <td> {{ chore["notes"] }} </td>
+                <td> {{ chore["credits"] }} </td>
+                <td> {{ chore["username"] }} </td>
+                {% if session["admin_id"] %}
+                    {% if chore["user_id"] %}
+                    <td> <button type="submit" class="btn btn-primary" name='complete_id' value='{{ chore["id"] }}'>Confirm Completion</button> </td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    <td> <button type="submit" class="btn btn-primary" name='delete_id' value='{{ chore["id"] }}'>Delete</button> </td>
+                {% elif session["user_id"] %}
+                    {% if chore["user_id"] %}
+                        <td><i>TAKEN</i></td>
+                    {% else %}
+                        <td> <button type="submit" class="btn btn-primary" name='claim_id' value='{{ chore["id"] }}'>Claim</button> </td>
+                    {% endif %}
+                {% endif %}
+                <td> </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </form>
+
+
+{% endblock %}
